@@ -10,7 +10,7 @@ Server::Server(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("服务器");
-    this->move(1000,200);
+    this->move(1020,200);
     this->setMaximumSize(900,650);
     this->setMinimumSize(900,650);
     ui->pushButton->setEnabled(false);
