@@ -14,9 +14,7 @@ InterFace::InterFace(QWidget *parent) :
     this->setMaximumSize(1020,700);
     this->setMinimumSize(1020,700);
     mSocket = new QTcpSocket();
-    isStart = true;
-    //设置进度条
-    ui->progressBar->setValue(0);//当前值
+    init();
 
     ui->pushButtonSend->setEnabled(false);
     ui->pushButtonDisconnect->setEnabled(false);
@@ -33,8 +31,6 @@ InterFace::InterFace(QWidget *parent) :
 
 InterFace::~InterFace()
 {
-
-
     delete ui;
 }
 
@@ -64,16 +60,16 @@ void InterFace::client_dis()
 void InterFace::read_data()
 {
 //    ui->listWidgetShow->setCurrentItem(NULL);
-//    QString msg = mSocket->readAll();
+//    //QString msg = mSocket->readAll();
 //    //可以实现同时读取多个客户端发送过来的消息
-//    //QTcpSocket *obj = (QTcpSocket*)sender();
-//    //msg = obj->readAll();
+// //                QTcpSocket *obj = (QTcpSocket*)sender();
+// //                msg = obj->readAll();
 //    sendName = "Mr.wang";
 //    sendTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm");
 
 //    //取发送信息编辑框内容
 //    //QString msg = ui->textEditWriter->toPlainText();
-//    sendSave = sendName+"   "+sendTime+'\n'+msg;
+//    sendSave = sendName+"   "+sendTime+'\n'+buf;
 
 //    QListWidgetItem *actionItem = new QListWidgetItem();
 //    actionItem->setText(sendSave);
@@ -81,9 +77,10 @@ void InterFace::read_data()
 //    ui->listWidgetShow->setCurrentItem(actionItem, QItemSelectionModel::Select);
 //    QString ActionList;
 //    ActionList = actionItem->text();
-
     //取出接收的内容
-    QByteArray buf = mSocket->readAll();
+    QTcpSocket *obj = (QTcpSocket*)sender();
+    QByteArray buf = obj->readAll();
+    //QByteArray buf = mSocket->readAll();
     if (true == isStart)
     {
         //接收头
@@ -95,50 +92,70 @@ void InterFace::read_data()
         //初始化
         fileName = QString(buf).section("##",0,0);
         fileSize = QString(buf).section("##",1,1).toInt();
-        //recvSize = 0;
+        if(fileSize == 0){
+            sendName = "Mr.wang";
+            sendTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm");
+
+            //取发送信息编辑框内容
+            //QString msg = ui->textEditWriter->toPlainText();
+            sendSave = sendName+"   "+sendTime+'\n'+buf;
+
+            QListWidgetItem *actionItem = new QListWidgetItem();
+            actionItem->setText(sendSave);
+            ui->listWidgetShow->addItem(actionItem);
+            ui->listWidgetShow->setCurrentItem(actionItem, QItemSelectionModel::Select);
+            QString ActionList;
+            ActionList = actionItem->text();
+            init();
+            return;
+        }
+        QString str =QString("[%1 : %2kb]").arg(fileName).arg(fileSize/1024);
+        ui->listWidgetShow->setCurrentItem(NULL);
+        sendName = "Mr.wang";
+        sendTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm");
+        sendSave = sendName+"   "+sendTime+'\n'+str;
+
+        QListWidgetItem *actionItem = new QListWidgetItem();
+        actionItem->setText(sendSave);
+        ui->listWidgetShow->addItem(actionItem);
+        ui->listWidgetShow->setCurrentItem(actionItem, QItemSelectionModel::Select);
+        //QString ActionList;
+        //ActionList = actionItem->text();
+
         //打开文件
         file.setFileName(fileName);
         bool isOk = file.open(QIODevice::WriteOnly);
         if (false == isOk)
         {
-            qDebug()<<"WriteOnly error 38 ";
-
-            mSocket->disconnectFromHost();//断开连接
-            mSocket->close();//关闭套接字
-
-            return ;//如果打开文件失败，中断函数
+            file.close();//关闭文件
+            //ui->listWidgetShow->deleteLater();
         }
         //弹出对话框，显示接收文件信息
-
-        QString str =QString("接收文件： [%1 : %2kb]").arg(fileName).arg(fileSize/1024);
-        //QMessageBox::information(this,"文件信息",str);
+//        QString str =QString("接收文件： [%1 : %2kb]").arg(fileName).arg(fileSize/1024);
+//        QMessageBox::information(this,"文件信息",str);
 
         //设置进度条
         ui->progressBar->setMinimum(0);//最小值
         ui->progressBar->setMaximum(fileSize/1024);//最大值
-        ui->progressBar->setValue(0);//当前值
-}
-        else//文件信息
-        {
+        //ui->progressBar->setValue(0);//当前值
+    }else{
             qint64 len =  file.write(buf);
-
             if(len > 0)
             {
                 recvSize += len;//累积接收大小
             }
             //更新进度条
             ui->progressBar->setValue(recvSize/1024);
-
-        if (recvSize == fileSize)
-        {
+            qDebug()<<"1";
+            if (ui->progressBar->text() == "100%")
+            {
             //先给服务发送（接收文件完成的消息）
-            mSocket->write("file done ");
-
+            //mSocket->write("file done ");
             QMessageBox::information(this,"完成","文件接收完毕");
-
             file.close();//关闭文件
+            init();
+            }
         }
-   }
 }
 
 void InterFace::on_pushButtonSend_clicked()
@@ -176,17 +193,7 @@ void InterFace::on_pushButtonConnect_clicked()
 
 void InterFace::on_pushButtonPicture_clicked()
 {
-    QPixmap pic(":/Image/Image/login.jpg");
-    QBuffer buffer;
-    buffer.open(QIODevice::ReadWrite);
-    pic.save(&buffer,"PNG");
-    QByteArray dataStr;
-    QDataStream out(&dataStr,QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_3);
-    out << (quint32) buffer.data().size();
-    dataStr.append(buffer.data());
-    mSocket->write(dataStr);
-    dataStr.resize(0);
+
 }
 
 void InterFace::on_pushButtonDisconnect_clicked()
@@ -197,4 +204,11 @@ void InterFace::on_pushButtonDisconnect_clicked()
 void InterFace::on_pushButtonClose_clicked()
 {
     this->close();
+}
+
+void InterFace::init(){
+    isStart = true;
+    ui->progressBar->setValue(0);//当前值
+    fileSize = 0;
+    recvSize = 0;
 }

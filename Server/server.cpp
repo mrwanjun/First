@@ -10,7 +10,7 @@ Server::Server(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("服务器");
-    this->move(1020,200);
+    this->move(1000,200);
     this->setMaximumSize(900,650);
     this->setMinimumSize(900,650);
     ui->pushButton->setEnabled(false);
@@ -113,6 +113,18 @@ void Server::on_pushButton_clicked()
 
 void Server::on_pushButtonSendPic_clicked()
 {  
+    ui->listWidgetShow->setCurrentItem(NULL);
+
+    QString msg = ui->textEditWriter->toPlainText();
+    QString w = "Server";
+    ui->listWidgetShow->colorCount();
+    QListWidgetItem *actionItem = new QListWidgetItem();
+    actionItem->setText(w+'\n'+msg);
+    ui->listWidgetShow->addItem(actionItem);
+    ui->listWidgetShow->setCurrentItem(actionItem, QItemSelectionModel::Select);
+    QString ActionList;
+    ActionList = actionItem->text();
+
     //先发送文件头信息  格式如：文件名##文件大小
     QString head = QString("%1##%2").arg(fileName).arg(fileSize);
 
@@ -122,6 +134,7 @@ void Server::on_pushButtonSendPic_clicked()
 
     if (len > 0)//头部信息发送成功
     {
+        qDebug()<<"定时器启动";
         //发送真正的文件信息
         //防止TCP黏包文件
         //需要通过定时器延时 20ms

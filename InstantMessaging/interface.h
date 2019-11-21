@@ -18,6 +18,7 @@ class InterFace : public QWidget
 public:
     explicit InterFace(QWidget *parent = 0);
     ~InterFace();
+    void init();
 
 signals:
 

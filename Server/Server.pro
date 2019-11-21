@@ -6,6 +6,8 @@
 
 QT       += core gui network
 
+QT += core gui sql
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Server
@@ -15,6 +17,7 @@ TEMPLATE = app
 SOURCES += main.cpp\
         server.cpp
 
-HEADERS  += server.h
+HEADERS  += server.h \
+    connection.h
 
 FORMS    += server.ui
