@@ -59,28 +59,8 @@ void InterFace::client_dis()
 
 void InterFace::read_data()
 {
-//    ui->listWidgetShow->setCurrentItem(NULL);
-//    //QString msg = mSocket->readAll();
-//    //可以实现同时读取多个客户端发送过来的消息
-// //                QTcpSocket *obj = (QTcpSocket*)sender();
-// //                msg = obj->readAll();
-//    sendName = "Mr.wang";
-//    sendTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm");
-
-//    //取发送信息编辑框内容
-//    //QString msg = ui->textEditWriter->toPlainText();
-//    sendSave = sendName+"   "+sendTime+'\n'+buf;
-
-//    QListWidgetItem *actionItem = new QListWidgetItem();
-//    actionItem->setText(sendSave);
-//    ui->listWidgetShow->addItem(actionItem);
-//    ui->listWidgetShow->setCurrentItem(actionItem, QItemSelectionModel::Select);
-//    QString ActionList;
-//    ActionList = actionItem->text();
-    //取出接收的内容
     QTcpSocket *obj = (QTcpSocket*)sender();
     QByteArray buf = obj->readAll();
-    //QByteArray buf = mSocket->readAll();
     if (true == isStart)
     {
         //接收头
@@ -96,8 +76,6 @@ void InterFace::read_data()
             sendName = "Mr.wang";
             sendTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm");
 
-            //取发送信息编辑框内容
-            //QString msg = ui->textEditWriter->toPlainText();
             sendSave = sendName+"   "+sendTime+'\n'+buf;
 
             QListWidgetItem *actionItem = new QListWidgetItem();

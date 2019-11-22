@@ -1,8 +1,10 @@
 #ifndef LOGIN_H
 #define LOGIN_H
 
-#include <QWidget>
 #include "interface.h"
+#include "zhuce.h"
+
+#include <QWidget>
 
 namespace Ui {
 class Login;
@@ -21,10 +23,13 @@ private slots:
 
     void on_lineEditPassword_textEdited();
 
+    void on_pushButtonLoginRegister_clicked();
+
 private:
     Ui::Login *ui;
 
     InterFace *interface;
+    Zhuce *zhuce;
 };
 
 #endif // LOGIN_H

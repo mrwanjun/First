@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui network
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,17 +14,20 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
     login.cpp \
-    interface.cpp
+    interface.cpp \
+    zhuce.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
     login.h \
-    interface.h
+    interface.h \
+    connection.h \
+    zhuce.h
 
-FORMS    += mainwindow.ui \
+FORMS    += \
     login.ui \
-    interface.ui
+    interface.ui \
+    zhuce.ui
 
 RESOURCES += \
     image.qrc \
