@@ -14,8 +14,6 @@ Login::Login(QWidget *parent) :
     this->setMaximumSize(963,600);
     this->setMinimumSize(963,600);
 
-    ui->lineEditAccount->setPlaceholderText("請输入用户名");
-    ui->lineEditPassword->setPlaceholderText("请输入密码");
     interface = new InterFace();
 
     QPalette Loginimage = this->palette();
@@ -52,6 +50,7 @@ void Login::on_pushButtonLogin_clicked()
             }
             else
                QMessageBox::warning(NULL,"Error","用户名或密码错误！！！");
+               ui->lineEditPassword->clear();
         }
 }
 

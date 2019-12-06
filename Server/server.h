@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QTimer>
+#include <QSqlQuery>
 namespace Ui {
 class Server;
 }
@@ -31,6 +32,7 @@ private slots:
 
     void on_pushButtonOpenPic_clicked();
     void sendData();
+    void chatDetail(QString name,QString time,QString detail);
 
 private:
     Ui::Server *ui;

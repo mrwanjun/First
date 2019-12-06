@@ -3,6 +3,7 @@
 #include <QMessageBox>
 #include <QImageReader>
 #include <QImage>
+#include <QDateTime>
 
 Server::Server(QWidget *parent) :
     QWidget(parent),
@@ -61,11 +62,12 @@ void Server::new_client()
 void Server::read_client_data()
 {
     ui->listWidgetShow->setCurrentItem(NULL);
+    QString sendTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm");
     //可以实现同时读取多个客户端发送过来的消息
     QTcpSocket *obj = (QTcpSocket*)sender();
     QString msg = obj->readAll();
     SendIP = obj->peerAddress().toString();
-    SendIP = SendIP.remove(0,6);
+    SendIP = SendIP.remove(0,7);
 
     ui->listWidgetShow->colorCount();
     QListWidgetItem *actionItem = new QListWidgetItem();
@@ -74,6 +76,7 @@ void Server::read_client_data()
     ui->listWidgetShow->setCurrentItem(actionItem, QItemSelectionModel::Select);
     QString ActionList;
     ActionList = actionItem->text();
+    chatDetail(SendIP,sendTime,msg);
 }
 
 void Server::client_dis()
@@ -84,7 +87,7 @@ void Server::client_dis()
      ui->pushButton->setEnabled(false);
      ui->pushButtonSendPic->setEnabled(false);
      ui->pushButtonOpenPic->setEnabled(false);
-     SendIP = SendIP.remove(0,6);
+     SendIP = SendIP.remove(0,7);
      QMessageBox::information(this,"提示","客户"+SendIP+"断开连接！");
 }
 
@@ -92,6 +95,7 @@ void Server::on_pushButton_clicked()
 {
     ui->listWidgetShow->setCurrentItem(NULL);
 
+    QString sendTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm");
     QString msg = ui->textEditWriter->toPlainText();
     //取发送信息编辑框内容
     //mSocket->write(msg.toUtf8());//转编码
@@ -100,6 +104,7 @@ void Server::on_pushButton_clicked()
         QTcpSocket *item = tcpSocketConnetList.at(i);//
         item->write(msg.toUtf8());//转编码     
     }
+    if(msg != NULL){
     QString w = "Server";
     ui->listWidgetShow->colorCount();
     QListWidgetItem *actionItem = new QListWidgetItem();
@@ -109,6 +114,10 @@ void Server::on_pushButton_clicked()
     QString ActionList;
     ActionList = actionItem->text();
     ui->textEditWriter->clear();
+    chatDetail(w,sendTime,msg);
+    }else{
+        QMessageBox::information(this,"提示","请输入内容");
+    }
 }
 
 void Server::on_pushButtonSendPic_clicked()
@@ -215,5 +224,14 @@ void Server::sendData()
         ui->pushButton->setEnabled(true);
         ui->pushButtonOpenPic->setEnabled(true);
         ui->pushButtonSendPic->setEnabled(false);
+    }
+}
+
+void Server::chatDetail(QString name,QString time,QString detail)
+{
+    QString i=QString("insert into chatdetail values ('%1','%2','%3'); ").arg(name).arg(time).arg(detail);
+    QSqlQuery query;
+    if(i != NULL){
+    query.exec(i);
     }
 }

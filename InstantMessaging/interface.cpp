@@ -59,6 +59,7 @@ void InterFace::client_dis()
 
 void InterFace::read_data()
 {
+    ui->listWidgetShow->setCurrentItem(NULL);
     QTcpSocket *obj = (QTcpSocket*)sender();
     QByteArray buf = obj->readAll();
     if (true == isStart)
