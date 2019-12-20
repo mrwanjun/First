@@ -15,9 +15,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        server.cpp
+        server.cpp \
+    chatdetail.cpp
 
 HEADERS  += server.h \
-    connection.h
+    connection.h \
+    chatdetail.h
 
-FORMS    += server.ui
+FORMS    += server.ui \
+    chatdetail.ui

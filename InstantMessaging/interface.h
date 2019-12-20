@@ -19,6 +19,7 @@ public:
     explicit InterFace(QWidget *parent = 0);
     ~InterFace();
     void init();
+    void sendUser(QString name);
 
 signals:
 
@@ -39,6 +40,7 @@ private slots:
 
 private:
     Ui::InterFace *ui;
+
     QTcpSocket *mSocket;
     IPConnect *ipconnect;
 

@@ -46,6 +46,7 @@ void Login::on_pushButtonLogin_clicked()
             if(model.rowCount()==1)//查询到有一个结果
             {
                interface->show();
+               interface->sendUser(user);
                this->close();
             }
             else

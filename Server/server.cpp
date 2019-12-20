@@ -10,6 +10,7 @@ Server::Server(QWidget *parent) :
     ui(new Ui::Server)
 {
     ui->setupUi(this);
+
     this->setWindowTitle("服务器");
     this->move(1000,200);
     this->setMaximumSize(900,650);
@@ -227,11 +228,18 @@ void Server::sendData()
     }
 }
 
-void Server::chatDetail(QString name,QString time,QString detail)
-{
-    QString i=QString("insert into chatdetail values ('%1','%2','%3'); ").arg(name).arg(time).arg(detail);
+void Server::chatDetail(QString name,QString time,QString content)
+{   
+    QString sql = QString("INSERT INTO chatcontent (name,time,content) VALUES ('%1','%2','%3')").arg(name).arg(time).arg(content);
     QSqlQuery query;
-    if(i != NULL){
-    query.exec(i);
+    if(sql != NULL)
+    {
+        query.exec(sql);
     }
+}
+
+void Server::on_pushButtonConmentShow_clicked()
+{
+    chatdetail = new ChatDetail(this);
+    chatdetail->show();
 }

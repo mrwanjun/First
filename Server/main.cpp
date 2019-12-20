@@ -2,6 +2,7 @@
 #include "connection.h"
 #include <QApplication>
 #include <QProcess>
+#include "chatdetail.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,6 +11,7 @@ int main(int argc, char *argv[])
     process.start("C:/Program Files/MySQL/MySQL Server 8.0/bin/mysqld.exe");
     if(!createConnection())return 1;
     Server w;
+//    ChatDetail w;
     w.show();
     return a.exec();
 }

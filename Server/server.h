@@ -10,6 +10,7 @@
 #include <QFile>
 #include <QTimer>
 #include <QSqlQuery>
+#include "chatdetail.h"
 namespace Ui {
 class Server;
 }
@@ -32,7 +33,9 @@ private slots:
 
     void on_pushButtonOpenPic_clicked();
     void sendData();
-    void chatDetail(QString name,QString time,QString detail);
+    void chatDetail(QString name,QString time,QString content);
+
+    void on_pushButtonConmentShow_clicked();
 
 private:
     Ui::Server *ui;
@@ -42,6 +45,7 @@ private:
     QTcpServer *mServer;
     QTcpSocket *mSocket;
 
+    ChatDetail *chatdetail;
     QTimer timer;
     QString fileName;//文件名字
     qint64 fileSize;//文件大小

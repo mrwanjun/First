@@ -1,8 +1,10 @@
 #include "interface.h"
 #include "ui_interface.h"
+#include "connection.h"
 #include <QMessageBox>
 #include <QList>
 #include <QBuffer>
+#include <QSqlQuery>
 
 InterFace::InterFace(QWidget *parent) :
     QWidget(parent),
@@ -189,5 +191,10 @@ void InterFace::init(){
     isStart = true;
     ui->progressBar->setValue(0);//当前值
     fileSize = 0;
-    recvSize = 0;
+    recvSize = 0; 
+}
+
+void InterFace::sendUser(QString name)
+{
+    ui->labelName->setText(name);
 }
